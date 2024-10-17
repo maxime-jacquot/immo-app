@@ -9,7 +9,6 @@ import { AuthModule } from './auth/auth.module';
     PrismaModule,
     UsersModule,
     ProjectsModule,
-    AuthModule,
-  ],
+    AuthModule,],
 })
 export class AppModule {}

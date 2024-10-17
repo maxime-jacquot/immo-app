@@ -9,17 +9,21 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { AuthGuard } from '../guard/auth.guard';
 import { UsersService } from './users.service';
 import { Prisma } from '@prisma/client';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  @Post()
-  create(@Body() data: Prisma.UserCreateInput) {
-    return this.usersService.create(data);
+  @Post('signup')
+  signeUp(@Body() data: Prisma.UserCreateInput) {
+    return this.usersService.createUser(data);
   }
 
   @Get()
@@ -36,7 +40,7 @@ export class UsersController {
   @UseGuards(AuthGuard)
   async getMe(@Request() req) {
     const userId = req.user.userId;
-    return this.usersService.getMe(userId);
+    return this.usersService.findOne(userId);
   }
 
   @Patch(':id')
